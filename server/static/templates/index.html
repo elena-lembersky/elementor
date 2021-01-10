@@ -5,25 +5,45 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Task</title>
+    <link rel="stylesheet" href="/static/css/index.css">
+    <title>Users List</title>
 </head>
 <body>
+<div class="page-overlay"></div>
 <div class="main">
-    <h1 class="wellcome">Wellcome dear! <span></span></h1>
-    <button class="logout" data-action="logout">Log Out</button>
-    <section id="users-wrap" class="users-wrap">
-        <div class="users-row">
-            <div class="users-item"></div>
-        </div>
+    <section class="users_header">
+        <h1 class="wellcome">Wellcome dear <span></span>!</h1>
+        <button class="logout" data-action="logout">Log Out</button>
     </section>
+    <section class="users_wrapper">
+        <p>Users Information list. Please click on row ton get additional info.</p>
+        <div id="users_table_wrapper" class="users_table_wrapper"></div>
+    </section>
+    <div class="general_modal">
+        <div class="general_modal_content">
+            <div class="general_modal_container">
+                <p>Additional User Info</p>
+                <div data-role="modal-container"></div>
+            </div>
+        </div>
+    </div>
 </div>
-<script type="module" src="/js/main.js"></script>
+
+<script type="module" src="/static/js/main.js"></script>
 <script>
+    const $body = document.querySelector('body');
     const $logoutButton = document.querySelector('[data-action="logout"]');
     $logoutButton.addEventListener("click", userLogout);
+    let isModal = $body.getAttribute('data-show-modal');
+    const $generalModal = document.querySelector('.general_modal');
+    const $generalModalContainer = document.querySelector('[data-role="modal-container"]');
+    const $usersTable = document.querySelector('.users_wrapper');
 
-    const $usersTable = document.querySelector('.users-wrap');
+    $usersTableWrapper = document.getElementById("users_table_wrapper");
+
+
     $usersTable.addEventListener("click", getUserInfo);
+    $generalModal.addEventListener("click", closeModal);
     //will logout after restart page too
     // window.onbeforeunload = function() {
     //     userLogout();
@@ -52,6 +72,21 @@
         const userID = tr.dataset.id;
         console.log('userID', userID);
         fetchUserData(userID);
+        //showModal();
+    }
+
+    function showModal(){
+        //const isModal = $body.getAttribute('data-show-modal');
+        console.log('isModal',isModal);
+        $body.setAttribute('data-show-modal',true);
+    }
+
+    function closeModal(e){
+        let isModalContent = e.target.closest('.general_modal_container');
+        if (isModalContent) return;
+        console.log('click');
+        $body.setAttribute('data-show-modal',false);
+        $generalModalContainer.innerHTML="";
     }
 
     function fetchUserData(userID){
@@ -61,7 +96,11 @@
             .then(res => res.json())
             .then((out) => {
                 console.log('User Data! ', out);
-                //document.getElementById("users-wrap").innerHTML=buildUsersTable(out);
+                //const output = JSON.parse(out[0]);
+                // if (!output.err) {
+                    $generalModalContainer.innerHTML=buildUsersTable(out);
+                    showModal();
+                // }
             })
             .catch(err => { throw err });
     }
@@ -73,7 +112,7 @@
             .then(res => res.json())
             .then((out) => {
                 console.log('All users data ', out);
-                document.getElementById("users-wrap").innerHTML=buildUsersTable(out);
+                $usersTableWrapper.innerHTML=buildUsersTable(out);
             })
             .catch(err => { throw err });
     }
@@ -92,15 +131,14 @@
             .join("");
 
         const table = `
-        <table>
+        <table class="data-table">
             <thead>
                 <tr>${headerRow}</tr>
-            <thead>
+            </thead>
             <tbody>
                 ${rows}
-            <tbody>
-        <table>`;
-
+            </tbody>
+        </table>`;
         return table;
     }
 

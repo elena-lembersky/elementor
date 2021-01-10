@@ -10,8 +10,10 @@
 </head>
 <body>
 <div class="main">
-    <section class="login-form">
-        <h1>Please Log In</h1>
+    <section class="login_header">
+        <h1>Hey! Not waste time and Login!</h1>
+    </section>
+    <section class="login_wrapper">
         <form class="login_form" id="login_form">
             <label for="name">User Name:</label>
             <input type="text" name="name" id="name" required/>
@@ -19,13 +21,15 @@
             <input type="password" name="password" id="password" maxlength="6" required/>
             <button data-action="login" type="submit">Log In</button>
         </form>
+        <div class="login_errors" data-action="login-errors"></div>
     </section>
 </div>
-<script type="module" src="/static/js/main.js"></script>
+<script type="module" src="/static/js/login.js"></script>
 <script>
 
     const $loginForm = document.getElementById('login_form');
     $loginForm.addEventListener('submit',logIn);
+    $loginFormErros = document.querySelector('[data-action="login-errors"]')
 
     function logIn(e){
         e.preventDefault();
@@ -51,10 +55,13 @@
             console.log('post response ', out);
             const output = JSON.parse(out);
             if (output.ok) {
+                //console.log(output.ok);
                 location.reload();
             }
             else if (output.err) {
-                console.log(output.err);
+                //console.log(output.err);
+                $loginForm.reset()
+                $loginFormErros.textContent = output.err;
             };
         })
         .catch(err => { throw err });

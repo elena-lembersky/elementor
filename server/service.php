@@ -27,6 +27,8 @@ class Service {
     public function getUserInfo($id) {
         $db = new SQLite3('users.db');
         $results = $db->query("SELECT * FROM users WHERE id = {$id}");
+        $row = array();
+        $i = 0;
         while ($res = $results->fetchArray(SQLITE3_ASSOC)) {
             if(!isset($res['id'])) continue;
               $row[$i]['ID'] = $res['id'];
@@ -65,8 +67,8 @@ class Service {
             if ($password==$postResult->password) {
                 $_SESSION["login"]=$username;
                 //TODO add md5
-//                 setcookie("user_name", $username, time() + (86400 * 30), "/");
-//                 setcookie("user_id", $id, time() + (86400 * 30), "/");
+                setcookie("user_name", $username, time() + (86400 * 30), "/");
+                setcookie("user_id", $id, time() + (86400 * 30), "/");
                 $this->updateUserInfo($id,$login_counter);
                 echo json_encode('{"ok":"Wellcome"}');
             }
