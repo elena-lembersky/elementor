@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Task</title>
+</head>
+<body>
+<div class="main">
+    <h1 class="wellcome">Wellcome dear! <span></span></h1>
+    <button class="logout" data-action="logout">Log Out</button>
+    <section id="users-wrap" class="users-wrap">
+        <div class="users-row">
+            <div class="users-item"></div>
+        </div>
+    </section>
+</div>
+<script type="module" src="/js/main.js"></script>
+<script>
+    const $logoutButton = document.querySelector('[data-action="logout"]');
+    $logoutButton.addEventListener("click", userLogout);
+
+    const $usersTable = document.querySelector('.users-wrap');
+    $usersTable.addEventListener("click", getUserInfo);
+    //will logout after restart page too
+    // window.onbeforeunload = function() {
+    //     userLogout();
+    // };
+
+    const $titleName = document.querySelector(".wellcome span");
+    $titleName.textContent = returnCookieUserName();
+
+    function userLogout(){
+        const userID = returnCookieUserID();
+        let url = `http://localhost:8080/logout/${userID}`;
+        fetch(url)
+            .then(res => res.json())
+            .then((out) => {
+                const output = JSON.parse(out);
+                if (output.ok) {
+                    location.reload();
+                }
+            })
+            .catch(err => { throw err });
+    }
+
+    function getUserInfo(e){
+        let tr = e.target.closest('tr');
+        if (!tr) return;
+        const userID = tr.dataset.id;
+        console.log('userID', userID);
+        fetchUserData(userID);
+    }
+
+    function fetchUserData(userID){
+        let url = `http://localhost:8080/user/${userID}`;
+
+        fetch(url)
+            .then(res => res.json())
+            .then((out) => {
+                console.log('User Data! ', out);
+                //document.getElementById("users-wrap").innerHTML=buildUsersTable(out);
+            })
+            .catch(err => { throw err });
+    }
+
+    function getUsers(){
+        let url = 'http://localhost:8080/users';
+
+        fetch(url)
+            .then(res => res.json())
+            .then((out) => {
+                console.log('All users data ', out);
+                document.getElementById("users-wrap").innerHTML=buildUsersTable(out);
+            })
+            .catch(err => { throw err });
+    }
+
+    function buildUsersTable(json) {
+        let cols = Object.keys(json[0]);
+        let headerRow = cols
+            .map(col => `<th>${col}</th>`)
+            .join("");
+
+        let rows = json
+            .map(row => {
+                let tds = cols.map(col => `<td>${row[col]}</td>`).join("");
+                return `<tr data-id="${row['ID']}">${tds}</tr>`;
+            })
+            .join("");
+
+        const table = `
+        <table>
+            <thead>
+                <tr>${headerRow}</tr>
+            <thead>
+            <tbody>
+                ${rows}
+            <tbody>
+        <table>`;
+
+        return table;
+    }
+
+    getUsers();
+
+    function returnCookieUserName(){
+        return cookieValue = document.cookie.replace(/(?:(?:^|.*;\s*)user_name\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+    }
+
+    function returnCookieUserID(){
+        return cookieValue = document.cookie.replace(/(?:(?:^|.*;\s*)user_id\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+    }
+
+    // const intervalID = setInterval(function (){
+    //     setTimeout(getUsers,0);
+    // },3000);
+
+    //clear interval if user leaved browser
+    // setTimeout(function (){
+    //     clearInterval(intervalID);
+    //     alert("Please refresh your Browser to Continue");
+    // }, 3 * 60 * 1000);
+
+</script>
+</body>
+</html>
