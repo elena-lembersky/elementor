@@ -51,8 +51,10 @@ class Service {
        $inputJSON = file_get_contents('php://input');
        $postResult = json_decode( $inputJSON );
        header('Content-Type: application/json');
+       $userName = trim($postResult->name);
+       $userPassword = trim($postResult->password);
 
-       $sql ="SELECT * FROM users WHERE name = '{$postResult->name}'";
+       $sql ="SELECT * FROM users WHERE name = '{$userName}'";
        $db = new SQLite3('users.db');
        $results = $db->query($sql);
 
@@ -64,15 +66,16 @@ class Service {
        }
 
         if ($id!="") {
-            if ($password==$postResult->password) {
+            if ($password==$userPassword) {
                 $_SESSION["login"]=$username;
-                //TODO add md5
+                //TODO add md5 for user password
                 setcookie("user_name", $username, time() + (86400 * 30), "/");
                 setcookie("user_id", $id, time() + (86400 * 30), "/");
                 $this->updateUserInfo($id,$login_counter);
                 echo json_encode('{"ok":"Wellcome"}');
             }
             else {
+                //TODO add errors to constants
                 echo json_encode('{"err":"Wrong Password"}');
             }
         }
@@ -126,6 +129,7 @@ class Service {
         user_ip = '{$ip}'
         WHERE id = {$id}";
         $query = $db->exec($sql);
+        //TODO add fallback for errors
         if ($query) {
             //echo 'Amount of updated rows: ', $db->changes();
         }
@@ -149,4 +153,5 @@ class Service {
             $ipaddress = 'UNKNOWN';
         return $ipaddress;
     }
+
 }

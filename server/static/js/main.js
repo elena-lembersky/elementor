@@ -9,3 +9,18 @@ $logoutButton.addEventListener("click", userLogout);
 getUsers();
 printUserName();
 
+///////// TODO add socket or worker here /////////
+const intervalID = setInterval(function (){
+    setTimeout(getUsers,0);
+},3000);
+
+//clear interval if user leaved browser
+setTimeout(function (){
+    clearInterval(intervalID);
+    alert("Please refresh your Browser to Continue");
+}, 3 * 60 * 1000);
+
+////////////////////////////////////////////////////
+
+
+
