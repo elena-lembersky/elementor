@@ -14,51 +14,31 @@ class Service {
     }
 
     public function getUserInfo($id) {
-        $db = new SQLite3('users.db');
-        $results = $db->query("SELECT * FROM users WHERE id = {$id}");
-        $row = array();
-        $i = 0;
-        while ($res = $results->fetchArray(SQLITE3_ASSOC)) {
-            if(!isset($res['id'])) continue;
-              $row[$i]['ID'] = $res['id'];
-              $row[$i]['User Agent'] = $res['user_agent'];
-              $row[$i]['Register Time'] = $res['register_time'];
-              $row[$i]['Logins Count'] = $res['login_count'];
-              $i++;
-        }
-        if ($row) {
-            echo json_encode($row);
-        }
-        else {
-            echo json_encode('{"err":"Something went wrong"}');
-        }
-        $db->close();
+        $repo = new Repo();
+        $results = $repo->getAddUserInfo($id);
+        $myJSON = json_encode($results);
+        echo $myJSON;
     }
 
     public function login() {
-       session_start();
-       $inputJSON = file_get_contents('php://input');
-       $postResult = json_decode( $inputJSON );
-       header('Content-Type: application/json');
-       $userName = trim($postResult->name);
-       $userPassword = trim($postResult->password);
+        session_start();
+        $inputJSON = file_get_contents('php://input');
+        $postResult = json_decode( $inputJSON );
+        header('Content-Type: application/json');
+        $userName = trim($postResult->name);
+        $userPassword = trim($postResult->password);
 
-       $sql ="SELECT * FROM users WHERE name = '{$userName}'";
-       $db = new SQLite3('users.db');
-       $results = $db->query($sql);
-
-       while ($res = $results->fetchArray(SQLITE3_ASSOC)) {
-          $id=$res['id'];
-          $username=$res["name"];
-          $password=$res['password'];
-          $login_counter=$res['login_count'];
-       }
+        $repo = new Repo();
+        $results = $repo->login($userName);
+        $id=$results['id'];
+        $password = $results['password'];
+        $login_counter = $results['login_count'];
 
         if ($id!="") {
             if ($password==$userPassword) {
-                $_SESSION["login"]=$username;
+                $_SESSION["login"]=$userName;
                 //TODO add md5 for user password
-                setcookie("user_name", $username, time() + (86400 * 30), "/");
+                setcookie("user_name", $userName, time() + (86400 * 30), "/");
                 setcookie("user_id", $id, time() + (86400 * 30), "/");
                 $this->updateUserInfo($id,$login_counter);
                 echo json_encode('{"ok":"Wellcome"}');
@@ -71,23 +51,15 @@ class Service {
         else{
             echo json_encode('{"err":"User not exist"}');
         }
-
-        $db->close();
     }
 
     public function logout($id) {
         session_start();
         $id = (int)$id;
-        $db = new SQLite3('users.db');
+        $repo = new Repo();
+        $results = $repo->logout($id);
 
-        $sql ="
-        UPDATE users
-        SET
-        last_updated = datetime('now','localtime'),
-        login_live = 0
-        WHERE id = {$id}";
-        $query = $db->exec($sql);
-        if ($query) {
+        if ($results) {
             unset($_COOKIE['user_name']);
             unset($_COOKIE['user_id']);
             setcookie('user_name', null, -1, '/');
@@ -97,7 +69,7 @@ class Service {
         else {
             echo json_encode('{"err":"Something went wrong"}');
         }
-        $db->close();
+
         unset($_SESSION["login"]);
         session_destroy();
     }
@@ -107,21 +79,8 @@ class Service {
         ++$login_counter;
         $userAgent = $_SERVER['HTTP_USER_AGENT'];
         $ip = $this->get_client_ip();
-        $db = new SQLite3('users.db');
-        $sql ="
-        UPDATE users
-        SET
-        login_count = {$login_counter},
-        login_last = datetime('now','localtime'),
-        login_live = 1,
-        user_agent = '{$userAgent}',
-        user_ip = '{$ip}'
-        WHERE id = {$id}";
-        $query = $db->exec($sql);
-        //TODO add fallback for errors
-        if ($query) {
-            //echo 'Amount of updated rows: ', $db->changes();
-        }
+        $repo = new Repo();
+        $results = $repo->updateLoginInfo($id,$login_counter,$userAgent,$ip);
     }
 
     private function get_client_ip() {
