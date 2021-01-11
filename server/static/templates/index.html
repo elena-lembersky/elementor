@@ -31,126 +31,130 @@
 
 <script type="module" src="/static/js/main.js"></script>
 <script>
-    const $body = document.querySelector('body');
-    const $logoutButton = document.querySelector('[data-action="logout"]');
-    $logoutButton.addEventListener("click", userLogout);
-    let isModal = $body.getAttribute('data-show-modal');
-    const $generalModal = document.querySelector('.general_modal');
-    const $generalModalContainer = document.querySelector('[data-role="modal-container"]');
-    const $usersTable = document.querySelector('.users_wrapper');
+    //const $body = document.querySelector('body');
+    // const $logoutButton = document.querySelector('[data-action="logout"]');
+    // let isModal = $body.getAttribute('data-show-modal');
+    // const $generalModal = document.querySelector('.general_modal');
+    // const $generalModalContainer = document.querySelector('[data-role="modal-container"]');
+    // const $usersTable = document.querySelector('.users_wrapper');
+//    const $usersTableWrapper = document.getElementById("users_table_wrapper");
+//     const $titleName = document.querySelector(".wellcome span");
 
-    $usersTableWrapper = document.getElementById("users_table_wrapper");
+    //$logoutButton.addEventListener("click", userLogout);
+//    $usersTable.addEventListener("click", getUserInfo);
+   // $generalModal.addEventListener("click", closeModal);
 
-
-    $usersTable.addEventListener("click", getUserInfo);
-    $generalModal.addEventListener("click", closeModal);
     //will logout after restart page too
     // window.onbeforeunload = function() {
     //     userLogout();
     // };
 
-    const $titleName = document.querySelector(".wellcome span");
-    $titleName.textContent = returnCookieUserName();
+    // function printUserName() {
+    //     $titleName.textContent = returnCookieUserName();
+    // }
+    //
+    // printUserName();
 
-    function userLogout(){
-        const userID = returnCookieUserID();
-        let url = `http://localhost:8080/logout/${userID}`;
-        fetch(url)
-            .then(res => res.json())
-            .then((out) => {
-                const output = JSON.parse(out);
-                if (output.ok) {
-                    location.reload();
-                }
-            })
-            .catch(err => { throw err });
-    }
 
-    function getUserInfo(e){
-        let tr = e.target.closest('tr');
-        if (!tr) return;
-        const userID = tr.dataset.id;
-        console.log('userID', userID);
-        fetchUserData(userID);
-        //showModal();
-    }
+    // function userLogout(){
+    //     const userID = returnCookieUserID();
+    //     let url = `http://localhost:8080/logout/${userID}`;
+    //     fetch(url)
+    //         .then(res => res.json())
+    //         .then((out) => {
+    //             const output = JSON.parse(out);
+    //             if (output.ok) {
+    //                 location.reload();
+    //             }
+    //         })
+    //         .catch(err => { throw err });
+    // }
 
-    function showModal(){
-        //const isModal = $body.getAttribute('data-show-modal');
-        console.log('isModal',isModal);
-        $body.setAttribute('data-show-modal',true);
-    }
+    // function getUserInfo(e){
+    //     let tr = e.target.closest('tr');
+    //     if (!tr) return;
+    //     const userID = tr.dataset.id;
+    //     console.log('userID', userID);
+    //     fetchUserData(userID);
+    //     //showModal();
+    // }
 
-    function closeModal(e){
-        let isModalContent = e.target.closest('.general_modal_container');
-        if (isModalContent) return;
-        console.log('click');
-        $body.setAttribute('data-show-modal',false);
-        $generalModalContainer.innerHTML="";
-    }
+    // function showModal(){
+    //     //const isModal = $body.getAttribute('data-show-modal');
+    //     console.log('isModal',isModal);
+    //     $body.setAttribute('data-show-modal',true);
+    // }
 
-    function fetchUserData(userID){
-        let url = `http://localhost:8080/user/${userID}`;
+    // function closeModal(e){
+    //     let isModalContent = e.target.closest('.general_modal_container');
+    //     if (isModalContent) return;
+    //     console.log('click');
+    //     $body.setAttribute('data-show-modal',false);
+    //     $generalModalContainer.innerHTML="";
+    // }
 
-        fetch(url)
-            .then(res => res.json())
-            .then((out) => {
-                console.log('User Data! ', out);
-                //const output = JSON.parse(out[0]);
-                // if (!output.err) {
-                    $generalModalContainer.innerHTML=buildUsersTable(out);
-                    showModal();
-                // }
-            })
-            .catch(err => { throw err });
-    }
+    // function fetchUserData(userID){
+    //     let url = `http://localhost:8080/user/${userID}`;
+    //
+    //     fetch(url)
+    //         .then(res => res.json())
+    //         .then((out) => {
+    //             console.log('User Data! ', out);
+    //             //const output = JSON.parse(out[0]);
+    //             // if (!output.err) {
+    //                 $generalModalContainer.innerHTML=buildUsersTable(out);
+    //                 showModal();
+    //             // }
+    //         })
+    //         .catch(err => { throw err });
+    // }
 
-    function getUsers(){
-        let url = 'http://localhost:8080/users';
+    // function getUsers(){
+    //     let url = 'http://localhost:8080/users';
+    //
+    //     fetch(url)
+    //         .then(res => res.json())
+    //         .then((out) => {
+    //             console.log('All users data ', out);
+    //             $usersTableWrapper.innerHTML=buildUsersTable(out);
+    //         })
+    //         .catch(err => { throw err });
+    // }
 
-        fetch(url)
-            .then(res => res.json())
-            .then((out) => {
-                console.log('All users data ', out);
-                $usersTableWrapper.innerHTML=buildUsersTable(out);
-            })
-            .catch(err => { throw err });
-    }
+    // function buildUsersTable(json) {
+    //     let cols = Object.keys(json[0]);
+    //     let headerRow = cols
+    //         .map(col => `<th>${col}</th>`)
+    //         .join("");
+    //
+    //     let rows = json
+    //         .map(row => {
+    //             let tds = cols.map(col => `<td>${row[col]}</td>`).join("");
+    //             return `<tr data-id="${row['ID']}">${tds}</tr>`;
+    //         })
+    //         .join("");
+    //
+    //     const table = `
+    //     <table class="data-table">
+    //         <thead>
+    //             <tr>${headerRow}</tr>
+    //         </thead>
+    //         <tbody>
+    //             ${rows}
+    //         </tbody>
+    //     </table>`;
+    //     return table;
+    // }
 
-    function buildUsersTable(json) {
-        let cols = Object.keys(json[0]);
-        let headerRow = cols
-            .map(col => `<th>${col}</th>`)
-            .join("");
+    //getUsers();
 
-        let rows = json
-            .map(row => {
-                let tds = cols.map(col => `<td>${row[col]}</td>`).join("");
-                return `<tr data-id="${row['ID']}">${tds}</tr>`;
-            })
-            .join("");
+    // function returnCookieUserName(){
+    //     return cookieValue = document.cookie.replace(/(?:(?:^|.*;\s*)user_name\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+    // }
 
-        const table = `
-        <table class="data-table">
-            <thead>
-                <tr>${headerRow}</tr>
-            </thead>
-            <tbody>
-                ${rows}
-            </tbody>
-        </table>`;
-        return table;
-    }
-
-    getUsers();
-
-    function returnCookieUserName(){
-        return cookieValue = document.cookie.replace(/(?:(?:^|.*;\s*)user_name\s*\=\s*([^;]*).*$)|^.*$/, "$1");
-    }
-
-    function returnCookieUserID(){
-        return cookieValue = document.cookie.replace(/(?:(?:^|.*;\s*)user_id\s*\=\s*([^;]*).*$)|^.*$/, "$1");
-    }
+    // function returnCookieUserID(){
+    //     return cookieValue = document.cookie.replace(/(?:(?:^|.*;\s*)user_id\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+    // }
 
     // const intervalID = setInterval(function (){
     //     setTimeout(getUsers,0);

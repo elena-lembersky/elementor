@@ -62,8 +62,13 @@ p {
   color: #fff;
   line-height: 1.4;
   background-color: #4CAF50;
+  border-right: 1px solid #77b300;
+  border-top: 1px solid #77b300;
   padding: 10px;
   text-align: center;
+}
+.data-table th:last-child {
+  border-right: none;
 }
 .data-table td {
   padding: 15px 10px;
