@@ -1,27 +1,16 @@
 <?php
 
+include('repo.php');
+
 class Service {
+
+    function __construct(){}
+
     public function getUsersInfo() {
-
-        $db = new SQLite3('users.db');
-        $results = $db->query("SELECT * FROM users");
-
-        $row = array();
-        $i = 0;
-
-        while ($res = $results->fetchArray(SQLITE3_ASSOC)) {
-            if(!isset($res['id'])) continue;
-              $row[$i]['ID'] = $res['id'];
-              $row[$i]['User Name'] = $res['name'];
-              $row[$i]['Last Login Time'] = $res['login_last'];
-              $row[$i]['User IP'] = $res['user_ip'];
-              $row[$i]['Last Updated'] = $res['last_updated'];
-              $row[$i]['Is Live'] = $res['login_live'];
-              $i++;
-        }
-        $myJSON = json_encode($row);
+        $repo = new Repo();
+        $results = $repo->getAllUsers();
+        $myJSON = json_encode($results);
         echo $myJSON;
-        $db->close();
     }
 
     public function getUserInfo($id) {
