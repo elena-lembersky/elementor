@@ -21,6 +21,7 @@ class Service {
     }
 
     public function login() {
+    //TODO check if user logged in and return false
         session_start();
         $inputJSON = file_get_contents('php://input');
         $postResult = json_decode( $inputJSON );
