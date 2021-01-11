@@ -40,7 +40,6 @@ export function getUserInfo(e){
     const userID = tr.dataset.id;
     console.log('userID', userID);
     fetchUserData(userID);
-    //showModal();
 }
 
 export function getUsers(){

@@ -1,5 +1,5 @@
-import { $usersTable, $generalModal, $logoutButton } from './modules/utils.js';
-import { getUsers, getUserInfo, printUserName, userLogout } from './modules/user.js';
+import {$usersTable, $generalModal, $logoutButton, $usersTableWrapper} from './modules/utils.js';
+import {getUsers, getUserInfo, printUserName, userLogout, buildUsersTable} from './modules/user.js';
 import { closeModal } from './modules/modal.js';
 
 $usersTable.addEventListener("click", getUserInfo);
@@ -9,18 +9,17 @@ $logoutButton.addEventListener("click", userLogout);
 getUsers();
 printUserName();
 
-///////// TODO add socket or worker here /////////
-const intervalID = setInterval(function (){
-    setTimeout(getUsers,0);
-},3000);
-
-//clear interval if user leaved browser
-setTimeout(function (){
-    clearInterval(intervalID);
-    alert("Please refresh your Browser to Continue");
-}, 3 * 60 * 1000);
-
+///////// TODO logout user when close tab
+// window.onbeforeunload = function () {
+//     return 'Are you really want to perform the action?';
+// }
 ////////////////////////////////////////////////////
+// refresh data
+let pollingWorker = new Worker('static/js/pollingworker.js');
+
+pollingWorker.addEventListener('message', function contentReceiverFunc(e) {
+    $usersTableWrapper.innerHTML=buildUsersTable(e.data);
+});
 
 
 
