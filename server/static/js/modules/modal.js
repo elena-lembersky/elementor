@@ -1,8 +1,8 @@
 import { buildUsersTable } from "./user.js";
 import { $body, $generalModalContainer } from './utils.js';
 
-export function showModal(data,el){
-    el.innerHTML=buildUsersTable(data);
+export function showModal(data){
+    $generalModalContainer.innerHTML=buildUsersTable(data);
     $body.setAttribute('data-show-modal',true);
 }
 

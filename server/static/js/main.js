@@ -1,10 +1,18 @@
-import {$usersTable, $generalModal, $logoutButton, $usersTableWrapper} from './modules/utils.js';
-import {getUsers, getUserInfo, printUserName, userLogout, buildUsersTable} from './modules/user.js';
+import {$usersTable, $generalModal, $logoutButton} from './modules/utils.js';
+import {getUsers, getUserInfo, printUserName, userLogout, insertUsersDataToTable} from './modules/user.js';
 import { closeModal } from './modules/modal.js';
+import { dataHandler} from './modules/utils.js';
+
+// TODO logout user with more elegant solution
+// const isLogin = sessionStorage.getItem('is_login');
+// if (!isLogin) userLogout();
 
 $usersTable.addEventListener("click", getUserInfo);
 $generalModal.addEventListener("click", closeModal);
 $logoutButton.addEventListener("click", userLogout);
+
+//sessionStorage.setItem('tab', 'bla bla');
+
 
 getUsers();
 printUserName();
@@ -18,7 +26,7 @@ printUserName();
 let pollingWorker = new Worker('static/js/pollingworker.js');
 
 pollingWorker.addEventListener('message', function contentReceiverFunc(e) {
-    $usersTableWrapper.innerHTML=buildUsersTable(e.data);
+    dataHandler(e.data,insertUsersDataToTable);
 });
 
 

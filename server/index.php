@@ -4,7 +4,6 @@
 include('Route.php');
 require_once('service.php');
 
-// Add base route (startpage)
 Route::add('/',function(){
     session_start();
     if (!(isset($_SESSION['login']) && $_SESSION['login'] != '')) {

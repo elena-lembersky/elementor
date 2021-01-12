@@ -27,6 +27,11 @@ function logIn(e){
             console.log('post response ', out);
             const output = JSON.parse(out);
             if (output.ok) {
+                sessionStorage.setItem('is_login', true);
+                sessionStorage.setItem('user_name', output.ok[0]);
+                sessionStorage.setItem('user_id', output.ok[1]);
+                //console.log('dd',output.ok[0])
+
                 location.reload();
             }
             else if (output.err) {

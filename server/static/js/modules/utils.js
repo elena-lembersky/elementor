@@ -5,4 +5,12 @@ export const $generalModalContainer = document.querySelector('[data-role="modal-
 export const $usersTable = document.querySelector('.users_wrapper');
 export const $usersTableWrapper = document.getElementById("users_table_wrapper");
 export const $titleName = document.querySelector(".wellcome span");
-//export let isModal = $body.getAttribute('data-show-modal');
+
+export function dataHandler(data,callback){
+    if(data.ok) {
+        callback(data.ok);
+    }
+    else {
+        console.error(data.err);
+    }
+}

@@ -1,4 +1,4 @@
-import {$usersTableWrapper, $generalModalContainer, $titleName} from './utils.js';
+import {$usersTableWrapper, $generalModalContainer, $titleName, dataHandler} from './utils.js';
 import { showModal } from './modal.js';
 
 function logout(uid) {
@@ -25,11 +25,8 @@ function fetchUserData(uid){
     fetch(url)
         .then(res => res.json())
         .then((out) => {
-            console.log('User Data! ', out);
-            //const output = JSON.parse(out[0]);
-            // if (!output.err) {
-            showModal(out,$generalModalContainer);
-            // }
+            dataHandler(out,showModal);
+            //console.log('User Data! ', out.ok);
         })
         .catch(err => { throw err });
 }
@@ -38,7 +35,6 @@ export function getUserInfo(e){
     let tr = e.target.closest('tr');
     if (!tr) return;
     const userID = tr.dataset.id;
-    console.log('userID', userID);
     fetchUserData(userID);
 }
 
@@ -48,8 +44,8 @@ export function getUsers(){
     fetch(url)
         .then(res => res.json())
         .then((out) => {
-            console.log('All users data ', out);
-            $usersTableWrapper.innerHTML=buildUsersTable(out);
+            //console.log('All users data ', out);
+            dataHandler(out,insertUsersDataToTable);
         })
         .catch(err => { throw err });
 }
@@ -77,6 +73,10 @@ export function buildUsersTable(json) {
             </tbody>
         </table>`;
     return table;
+}
+
+export function insertUsersDataToTable(out){
+    $usersTableWrapper.innerHTML=buildUsersTable(out);
 }
 
 export function returnCookieUserID(){

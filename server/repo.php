@@ -24,7 +24,7 @@ class Repo {
         return $row;
     }
 
-    public function getAddUserInfo($id) {
+    public function getAdditionalUserInfo($id) {
         $this->connectDB();
         $result = $this->db->query("SELECT
         id AS 'ID',

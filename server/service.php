@@ -9,14 +9,25 @@ class Service {
     public function getUsersInfo() {
         $repo = new Repo();
         $results = $repo->getAllUsers();
-        $myJSON = json_encode($results);
+//         $myJSON = json_encode($results);
+        if(!empty($results)) {
+            $myJSON = json_encode(array('ok' => $results));
+        }
+        else {
+            $myJSON = json_encode(array('err' => 'err'));
+        }
         echo $myJSON;
     }
 
     public function getUserInfo($id) {
         $repo = new Repo();
-        $results = $repo->getAddUserInfo($id);
-        $myJSON = json_encode($results);
+        $results = $repo->getAdditionalUserInfo($id);
+        if(!empty($results)) {
+            $myJSON = json_encode(array('ok' => $results));
+        }
+        else {
+            $myJSON = json_encode(array('err' => 'err'));
+        }
         echo $myJSON;
     }
 
@@ -42,7 +53,7 @@ class Service {
                 setcookie("user_name", $userName, time() + (86400 * 30), "/");
                 setcookie("user_id", $id, time() + (86400 * 30), "/");
                 $this->updateUserInfo($id,$login_counter);
-                echo json_encode('{"ok":"Wellcome"}');
+                echo json_encode('{"ok": ["'.$userName.'",'.$id.']}');
             }
             else {
                 //TODO add errors to constants
