@@ -1,7 +1,17 @@
-#Elementor Love Users App
+#Elementor Live Users App
+Live Preview:
+http://206.189.60.96/
+
+You can try how it works.
+Users:
+- Login: Elena Password: 111111
+- Login: Mati Password: 222222
+- Login: Meytal Password: 333333
 
 #to run the APP
-please run from you terminal inside the test folder: php -S localhost:8080 -t server
+-use preview: http://206.189.60.96/
+- please run from you terminal inside the test folder: php -S localhost:8080 -t server
+
 
 #NOTES
 - User:
