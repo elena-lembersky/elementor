@@ -2,7 +2,7 @@ import {$usersTableWrapper, $generalModalContainer, $titleName, dataHandler} fro
 import { showModal } from './modal.js';
 
 function logout(uid) {
-    let url = `http://localhost:8080/logout/${uid}`;
+    let url = `/logout/${uid}`;
     fetch(url)
         .then(res => res.json())
         .then((out) => {
@@ -20,7 +20,7 @@ export function userLogout(){
 }
 
 function fetchUserData(uid){
-    let url = `http://localhost:8080/user/${uid}`;
+    const url = `/user/${uid}`;
 
     fetch(url)
         .then(res => res.json())
@@ -39,7 +39,7 @@ export function getUserInfo(e){
 }
 
 export function getUsers(){
-    let url = 'http://localhost:8080/users';
+    const url = '/users';
 
     fetch(url)
         .then(res => res.json())

@@ -5,7 +5,7 @@ $loginForm.addEventListener('submit',logIn);
 
 function logIn(e){
     e.preventDefault();
-    const url = 'http://localhost:8080/login';
+    const url = '/login';
     const formData = new FormData(this);
     const plainFormData = Object.fromEntries(formData.entries());
     const formDataJsonString = JSON.stringify(plainFormData);
